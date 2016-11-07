@@ -4,13 +4,13 @@ import { ApolloProvider } from 'react-apollo';
 
 import './App.css';
 
-import PostList from './PostList';
+import Organization from './Organization.js';
 
 class App extends Component {
   constructor(...args) {
     super(...args);
 
-    const networkInterface = createNetworkInterface('http://localhost:8080/graphql');
+    const networkInterface = createNetworkInterface('http://detroitledger.org:8081/graphql');
     this.client = new ApolloClient({
       networkInterface,
       dataIdFromObject: r => r.id,
@@ -19,7 +19,7 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={this.client}>
-        <PostList />
+        <Organization />
       </ApolloProvider>
     );
   }
