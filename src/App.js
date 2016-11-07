@@ -4,7 +4,7 @@ import { ApolloProvider } from 'react-apollo';
 
 import './App.css';
 
-import Organization from './Organization.js';
+import OrgWithResults from './OrgResults.js';
 
 class App extends Component {
   constructor(...args) {
@@ -15,11 +15,34 @@ class App extends Component {
       networkInterface,
       dataIdFromObject: r => r.id,
     });
+
+      this.state = {value: ''};
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+    // add throttle so only run query on full ein after done typing
+    // lodash method debounce for trailing https://lodash.com/docs/4.16.6#debounce
+  }
+  
+  handleSubmit(event) {
+    console.log('Ein search value is: ' + this.state.value);
+  }
+
   render() {
     return (
       <ApolloProvider client={this.client}>
-        <Organization />
+        <div>
+        <input type='text' 
+            placeholder='Search by EIN' 
+            onChange={this.handleChange} />
+        <button onClick={this.handleSubmit}>
+            Search
+        </button>
+        <OrgWithResults ein={this.state.value} />
+        </div>
       </ApolloProvider>
     );
   }
