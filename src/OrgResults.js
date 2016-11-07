@@ -2,23 +2,26 @@ import React, {Component} from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
+// Declare component to display query results
 class Results extends Component {
   render() {
+  	const thisOrg = this.props.data.organization;
   	if (this.props.data.loading) {
     	return <div>Loading...</div>;
    	} else {
      	return (
        		<ul>
-         		<li>{'Returned EIN: '}{this.props.data.organization.ein}</li>
-         		<li>{'Total revenue: $'}{this.props.data.organization.total_revenue}</li>
-         		<li>{'Total expenses: $'}{this.props.data.organization.total_expenses}</li>
-         		<li>{'Net assets: $'}{this.props.data.organization.net_assets}</li>
+         		<li>{'Returned EIN: '}{thisOrg.ein}</li>
+         		<li>{'Total revenue: $'}{thisOrg.total_revenue}</li>
+         		<li>{'Total expenses: $'}{thisOrg.total_expenses}</li>
+         		<li>{'Net assets: $'}{thisOrg.net_assets}</li>
        		</ul>
      	);
    	}
   }
 }
 
+// Define query with ein search parameter
 const getOrg = gql`
   query getOrg($ein: String!) {
   	organization(ein: $ein) {
@@ -53,6 +56,7 @@ const getOrg = gql`
    }
 `;
 
+// Declare component that sets ein as props on wrapper Results component
 const OrgWithResults = graphql(getOrg, {
   options: ({ ein }) => ({ variables: { ein } }),
 })(Results);
