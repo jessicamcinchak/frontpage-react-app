@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
-// Declare component to display query results
+// Child component to display query results
 class Results extends Component {
   render() {
   	const thisOrg = this.props.data.organization;
-  	if (this.props.data.loading) {
+  	
+    if (this.props.data.loading) {
     	return <div>Loading...</div>;
    	} else {
      	return (
@@ -56,7 +57,7 @@ const getOrg = gql`
    }
 `;
 
-// Declare component that sets ein as props on wrapper Results component
+// Child component to run query and set ein as props on Results wrapper component
 const OrgWithResults = graphql(getOrg, {
   options: ({ ein }) => ({ variables: { ein } }),
 })(Results);

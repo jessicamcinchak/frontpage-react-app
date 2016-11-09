@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
+// NO LONGER USED. See OrgResults.js
 // Simple example component, connect to Ledger gnl-graphql server
 // see https://github.com/apollostack/frontpage-react-app
 // and https://github.com/apollostack/frontpage-server/blob/master/server.js
 
-// Declare component to handle search and store its value as state
+// Component to handle search and store its value as state
 class SearchEin extends Component {
   constructor(props) {
     super(props);
