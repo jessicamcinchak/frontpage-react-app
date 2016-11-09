@@ -6,17 +6,30 @@ import { graphql } from 'react-apollo';
 class Results extends Component {
   render() {
   	const thisOrg = this.props.data.organization;
-  	
+
     if (this.props.data.loading) {
     	return <div>Loading...</div>;
    	} else {
+      // Use map to return arrays in single React item
+      const forms990Years = thisOrg.forms990.map(function(form990) {
+        return <div>{form990.tax_period}</div>;
+      });
+
+      const grantAmounts = thisOrg.ledgerGrants.map(function(grant) {
+        return <div>{grant.amount}</div>;
+      });
+
      	return (
+        <div>
        		<ul>
          		<li>{'Returned EIN: '}{thisOrg.ein}</li>
          		<li>{'Total revenue: $'}{thisOrg.total_revenue}</li>
          		<li>{'Total expenses: $'}{thisOrg.total_expenses}</li>
          		<li>{'Net assets: $'}{thisOrg.net_assets}</li>
+            <li>{'990s available for tax years ending:'}{forms990Years}</li>
+            <li>{'Sample grant amounts:'}{grantAmounts}</li>
        		</ul>
+        </div>
      	);
    	}
   }
@@ -52,7 +65,29 @@ const getOrg = gql`
       total_assets,
       total_liabilities,
       net_assets,
-      data
+      data,
+      forms990 {
+        id,
+        ein,
+        tax_period,
+        total_assets
+      },
+      ledgerOrganizations {
+        ein
+      },
+      ledgerGrants {
+        id,
+        ein,
+        amount,
+        start,
+        end
+      },
+      ledgerNewsArticles {
+        id,
+        link,
+        date,
+        desc
+      }
   	}
    }
 `;
