@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import numeral from 'numeral';
+import moment from 'moment';
 
 // Child component to display query results
 class Results extends Component {
@@ -12,26 +13,47 @@ class Results extends Component {
     	return <div>Loading...</div>;
    	} else {
       // Use map to return arrays in single React item
-      const forms990Years = thisOrg.forms990.map(function(form990) {
-        return <div>
-          {form990.tax_period}
-        </div>;
+      const orgName = thisOrg.ledgerOrganizations.map(function(org) {
+        return <div>{org.name}</div>;
       });
 
-      const grantAmounts = thisOrg.ledgerGrants.map(function(grant) {
-        return <div>{numeral(grant.amount).format('$0,0[.]00')}</div>;
+      const orgDesc = thisOrg.ledgerOrganizations.map(function(org) {
+        return <div>{org.description}</div>;
       });
 
      	return (
         <div>
-       		<ul>
-         		<li>{'Returned EIN: '}{thisOrg.ein}</li>
-         		<li>{'Total revenue: '}{numeral(thisOrg.total_revenue).format('$0,0[.]00')}</li>
-         		<li>{'Total expenses: '}{numeral(thisOrg.total_expenses).format('$0,0[.]00')}</li>
-         		<li>{'Net assets: '}{numeral(thisOrg.net_assets).format('$0,0[.]00')}</li>
-            <li>{'990s available for tax periods ending: '}{forms990Years}</li>
-            <li>{'Sample grant amounts: '}{grantAmounts}</li>
-       		</ul>
+          <h1>{orgName}</h1>
+          <p>{orgDesc}</p>
+          <h2>{'Financials'}</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>IRS tax period ending {moment(thisOrg.tax_period,'YYYYMM').format('MMM YYYY')}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total revenue</td>
+                <td>{numeral(thisOrg.total_revenue).format('$0,0[.]00')}</td>
+              </tr>
+              <tr>
+                <td>Total expenses</td>
+                <td>{numeral(thisOrg.total_expenses).format('$0,0[.]00')}</td>
+              </tr>
+              <tr>
+                <td>Net assets</td>
+                <td>{numeral(thisOrg.net_assets).format('$0,0[.]00')}</td>
+              </tr>
+              <tr>
+                <td>Total liabilities</td>
+                <td>{numeral(thisOrg.total_liabilities).format('$0,0[.]00')}</td>
+              </tr>
+            </tbody>
+          </table>
+          <h2>News</h2>
+          <h2>Grants</h2>
         </div>
      	);
    	}
@@ -76,7 +98,19 @@ const getOrg = gql`
         total_assets
       },
       ledgerOrganizations {
-        ein
+        name,
+        description,
+        id,
+        ein,
+        stateCorpId,
+        funded,
+        received,
+        start,
+        end,
+        ntees {
+          id,
+          name
+        }
       },
       ledgerGrants {
         id,

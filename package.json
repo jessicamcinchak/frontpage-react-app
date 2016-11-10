@@ -17,6 +17,7 @@
     "graphql-tag": "0.1.11",
     "graphql-tools": "^0.6.4",
     "lodash": "^4.15.0",
+    "moment": "^2.16.0",
     "numeral": "^1.5.3",
     "react": "^15.2.1",
     "react-apollo": "^0.5.12",
