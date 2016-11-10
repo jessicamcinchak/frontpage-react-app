@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import numeral from 'numeral';
 
 // Child component to display query results
 class Results extends Component {
@@ -12,22 +13,24 @@ class Results extends Component {
    	} else {
       // Use map to return arrays in single React item
       const forms990Years = thisOrg.forms990.map(function(form990) {
-        return <div>{form990.tax_period}</div>;
+        return <div>
+          {form990.tax_period}
+        </div>;
       });
 
       const grantAmounts = thisOrg.ledgerGrants.map(function(grant) {
-        return <div>{grant.amount}</div>;
+        return <div>{numeral(grant.amount).format('$0,0[.]00')}</div>;
       });
 
      	return (
         <div>
        		<ul>
          		<li>{'Returned EIN: '}{thisOrg.ein}</li>
-         		<li>{'Total revenue: $'}{thisOrg.total_revenue}</li>
-         		<li>{'Total expenses: $'}{thisOrg.total_expenses}</li>
-         		<li>{'Net assets: $'}{thisOrg.net_assets}</li>
-            <li>{'990s available for tax years ending:'}{forms990Years}</li>
-            <li>{'Sample grant amounts:'}{grantAmounts}</li>
+         		<li>{'Total revenue: '}{numeral(thisOrg.total_revenue).format('$0,0[.]00')}</li>
+         		<li>{'Total expenses: '}{numeral(thisOrg.total_expenses).format('$0,0[.]00')}</li>
+         		<li>{'Net assets: '}{numeral(thisOrg.net_assets).format('$0,0[.]00')}</li>
+            <li>{'990s available for tax periods ending: '}{forms990Years}</li>
+            <li>{'Sample grant amounts: '}{grantAmounts}</li>
        		</ul>
         </div>
      	);
