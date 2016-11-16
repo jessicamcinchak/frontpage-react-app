@@ -13,13 +13,49 @@ class Results extends Component {
     	return <div>Loading...</div>;
    	} else {
       // Use map to return arrays in single React item
-      const orgName = thisOrg.ledgerOrganizations.map(function(org) {
-        return <div>{org.name}</div>;
-      });
+      // Ref https://stackoverflow.com/questions/32157286/rendering-react-components-from-array-of-objects
+      const orgName = thisOrg.ledgerOrganizations.map(org =>
+        <div>{org.name}</div>
+      );
 
-      const orgDesc = thisOrg.ledgerOrganizations.map(function(org) {
-        return <div>{org.description}</div>;
-      });
+      const orgDesc = thisOrg.ledgerOrganizations.map(org => 
+        <div>{org.description}</div>
+      );
+
+      const orgFunded = thisOrg.ledgerOrganizations.map(org =>
+        <div>{numeral(org.funded).format('$0,0[.]00')}</div>
+      );
+
+      const orgReceived = thisOrg.ledgerOrganizations.map(org =>
+        <div>{numeral(org.received).format('$0,0[.]00')}</div>
+      );
+
+      const orgStart = thisOrg.ledgerOrganizations.map(org =>
+        <div>{org.start}</div>
+      );
+
+      const newsItem = thisOrg.ledgerNewsArticles.map(article =>
+        <ul>
+          <li>
+            {article.desc}
+            <a href={article.link}>{' Read more.'}</a>
+          </li>
+        </ul>
+      );
+
+      // how to output on single line??
+      const grantSummary = thisOrg.ledgerOrganizations.map(org =>
+        <p>{orgName}{' has received '}{orgReceived}{' and funded '}{orgFunded}{' total since '}{orgStart}</p>
+      );
+
+      const grantRecord = thisOrg.ledgerGrants.map(grant => 
+        <ul>
+          <li>
+            {numeral(grant.amount).format('$0,0[.]00')}
+            {' from '}{moment(grant.start).format('YYYY')}{' to '}{moment(grant.end).format('YYYY')}
+          </li>
+        </ul>
+      );
 
      	return (
         <div>
@@ -52,8 +88,12 @@ class Results extends Component {
               </tr>
             </tbody>
           </table>
-          <h2>News</h2>
           <h2>Grants</h2>
+            <p>{grantSummary}</p>
+          <h3>Sample grants</h3>
+            <p>{grantRecord}</p>
+          <h2>News</h2>
+            <p>{newsItem}</p>
         </div>
      	);
    	}
