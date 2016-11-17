@@ -15,53 +15,40 @@ class Results extends Component {
       // Use map to return arrays in single React item
       // Ref https://stackoverflow.com/questions/32157286/rendering-react-components-from-array-of-objects
       const orgName = thisOrg.ledgerOrganizations.map(org =>
-        <div>{org.name}</div>
+        <h1>{org.name}</h1>
       );
 
       const orgDesc = thisOrg.ledgerOrganizations.map(org => 
-        <div>{org.description}</div>
+        <p>{org.description}</p>
       );
 
-      const orgFunded = thisOrg.ledgerOrganizations.map(org =>
-        <div>{numeral(org.funded).format('$0,0[.]00')}</div>
-      );
-
-      const orgReceived = thisOrg.ledgerOrganizations.map(org =>
-        <div>{numeral(org.received).format('$0,0[.]00')}</div>
-      );
-
-      const orgStart = thisOrg.ledgerOrganizations.map(org =>
-        <div>{org.start}</div>
-      );
-
-      const newsItem = thisOrg.ledgerNewsArticles.map(article =>
-        <ul>
-          <li>
-            {article.desc}
-            <a href={article.link}>{' Read more.'}</a>
-          </li>
-        </ul>
-      );
-
-      // how to output on single line??
       const grantSummary = thisOrg.ledgerOrganizations.map(org =>
-        <p>{orgName}{' has received '}{orgReceived}{' and funded '}{orgFunded}{' total since '}{orgStart}</p>
+        <p>{'Received '}{numeral(org.received).format('$0,0[.]00')}{' and funded '}{numeral(org.funded).format('$0,0[.]00')}{' since '}{org.start}</p>
       );
 
       const grantRecord = thisOrg.ledgerGrants.map(grant => 
         <ul>
-          <li>
+          <li key={grant.id}>
             {numeral(grant.amount).format('$0,0[.]00')}
             {' from '}{moment(grant.start).format('YYYY')}{' to '}{moment(grant.end).format('YYYY')}
           </li>
         </ul>
       );
 
+      const newsItem = thisOrg.ledgerNewsArticles.map(article =>
+        <ul>
+          <li key={article.id}>
+            {article.desc}
+            <a href={article.link}>{' Read more.'}</a>
+          </li>
+        </ul>
+      );
+
      	return (
         <div>
-          <h1>{orgName}</h1>
-          <p>{orgDesc}</p>
-          <h2>{'Financials'}</h2>
+          {orgName}
+          {orgDesc}
+          <h2>Financials</h2>
           <table>
             <thead>
               <tr>
@@ -89,11 +76,11 @@ class Results extends Component {
             </tbody>
           </table>
           <h2>Grants</h2>
-            <p>{grantSummary}</p>
+            {grantSummary}
           <h3>Sample grants</h3>
-            <p>{grantRecord}</p>
+            {grantRecord}
           <h2>News</h2>
-            <p>{newsItem}</p>
+            {newsItem}
         </div>
      	);
    	}
